@@ -1,27 +1,26 @@
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-const PROTECTED_ROUTES = ["/todos", "/tasks", "/account"];
+const PROTECTED_ROUTES = ["/tasks"];
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
 
-  // Check if this is a protected route
   const requiresAuth = PROTECTED_ROUTES.some((route) =>
     pathname.startsWith(route)
   );
-
   if (!requiresAuth) return NextResponse.next();
 
-  // Get token from cookies
-  const token = req.cookies.get("token")?.value;
+  const cookieHeader = req.headers.get("cookie");
+  const token = cookieHeader
+    ?.split(";")
+    .find((c) => c.trim().startsWith("token="))
+    ?.split("=")[1];
 
-  // If no token, redirect to login
   if (!token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // Verify token
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     await jwtVerify(token, secret);
@@ -33,5 +32,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|.*\\.(?:ico|png|jpg|jpeg|svg|css|js|json)).*)"],
+  matcher: ["/((?!_next|.*\\.(?:ico|png|jpg|jpeg|svg|css|js|json|txt|xml)).*)"],
 };
