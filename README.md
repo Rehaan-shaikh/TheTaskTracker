@@ -3,7 +3,7 @@
 A full-stack task management web app where users can create, manage, and track their tasks — with an AI assistant to help them stay productive.
 
 ## 🔗 Live Demo
-👉 [View deployed app](https://thetasktracker.vercel.app/)
+👉 [View deployed app](https://the-task-tracker.vercel.app/)
 
 ---
 
